@@ -1,0 +1,19 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv/
+
+.aim/
+.ipynb_checkpoints/
+.pytest_cache/
+.ruff_cache
+.python-version
+main.py
+uv.lock
+scripts/
