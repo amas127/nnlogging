@@ -1,13 +1,20 @@
 # nnlogging
 
-A powerful logging library for neural network and machine learning experiments that combines [Rich](https://github.com/Textualize/rich) for beautiful terminal output with [Aim](https://github.com/aimhubio/aim) for comprehensive experiment tracking.
+A powerful logging library for neural network and machine learning experiments
+that combines [Rich](https://github.com/Textualize/rich) for beautiful terminal
+output with [Aim](https://github.com/aimhubio/aim) for comprehensive experiment
+tracking.
 
 ## ✨ Features
 
-- 🎨 **Beautiful Console Output** - Rich-powered colorful logging with progress bars
-- 📊 **Experiment Tracking** - Built-in Aim integration for metrics and hyperparameters
-- 🔧 **Flexible Logging** - Multiple console handlers with customizable formatting
-- 📈 **Progress Tracking** - Advanced progress bars for long-running training loops
+- 🎨 **Beautiful Console Output** - Rich-powered colorful logging with progress
+  bars
+- 📊 **Experiment Tracking** - Built-in Aim integration for metrics and
+  hyperparameters
+- 🔧 **Flexible Logging** - Multiple console handlers with customizable
+  formatting
+- 📈 **Progress Tracking** - Advanced progress bars for long-running training
+  loops
 - 🎯 **ML-Focused Design** - Purpose-built for machine learning workflows
 - 🐍 **Modern Python** - Python 3.10+ with full type hints
 
@@ -22,6 +29,7 @@ pip install nnlogging
 ## ⚡ Quick Start
 
 ### Basic Logging
+
 ```python
 from nnlogging import Shell
 from nnlogging.utils import get_rich_console
@@ -39,6 +47,7 @@ shell.error("CUDA out of memory")
 ```
 
 ### Experiment Tracking
+
 ```python
 # Initialize Aim tracking
 shell.add_aimrun(experiment="resnet_training")
@@ -60,6 +69,7 @@ shell.update_aimrun_metadata("config", {
 ```
 
 ### Progress Tracking
+
 ```python
 # Setup progress bars
 shell.build_progress_from_console("main")
@@ -78,6 +88,7 @@ shell.stop_progress()
 ```
 
 ### Complete Training Example
+
 ```python
 from nnlogging import Shell
 from nnlogging.utils import get_rich_console

@@ -5,15 +5,25 @@ build/
 dist/
 wheels/
 *.egg-info
-
-# Virtual environments
 .venv/
 
+# lock
+uv.lock
+
 .aim/
+.zed/
 .ipynb_checkpoints/
 .pytest_cache/
-.ruff_cache
+.ruff_cache/
 .python-version
 main.py
-uv.lock
-scripts/
+d2/
+
+# Test
+htmlcov
+.coverage
+
+# js
+node_modules/
+package.json
+package-lock.json

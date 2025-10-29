@@ -1,0 +1,13 @@
+{
+  "overrides": [
+    {
+      "files": ["*.toml"],
+      "options": {
+        "parser": "toml",
+        "plugins": ["prettier-plugin-toml"]
+      }
+    }
+  ],
+  "printWidth": 80,
+  "proseWrap": "always"
+}

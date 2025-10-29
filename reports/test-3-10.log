@@ -1,0 +1,54 @@
+============================= test session starts ==============================
+platform linux -- Python 3.10.18, pytest-8.4.2, pluggy-1.6.0
+rootdir: /home/amas/Projects/nnlogging
+configfile: pyproject.toml
+plugins: cov-7.0.0, repeat-0.9.4, html-4.1.1, sugar-1.1.1, metadata-3.1.1, xdist-3.8.0, anyio-4.11.0, Faker-37.11.0
+collected 249 items
+
+tests/shell/test_branch_funcs.py ........                                [  3%]
+tests/shell/test_configure.py .......................................... [ 20%]
+                                                                         [ 20%]
+tests/shell/test_init.py ..                                              [ 20%]
+tests/shell/test_logger_funcs.py ....................                    [ 28%]
+tests/shell/test_run_funcs.py ......                                     [ 31%]
+tests/shell/test_task_funcs.py .........                                 [ 34%]
+tests/typings/test_minimal_protocol.py ....................              [ 42%]
+tests/utils/test_helper.py ......                                        [ 45%]
+tests/utils/test_logger_factory.py ........................              [ 55%]
+tests/utils/test_rich_factory.py ....................................... [ 70%]
+.....................................................................    [ 98%]
+tests/utils/test_run_factory.py ....                                     [100%]
+
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.10.18-final-0 _______________
+
+Name                                                Stmts   Miss  Cover   Missing
+---------------------------------------------------------------------------------
+src/nnlogging/__init__.py                               4      0   100%
+src/nnlogging/shell/__init__.py                         3      0   100%
+src/nnlogging/shell/exception/__init__.py               5      0   100%
+src/nnlogging/shell/exception/branch_exists.py         17      1    94%   4
+src/nnlogging/shell/exception/branch_not_found.py      17      1    94%   4
+src/nnlogging/shell/exception/task_exists.py           17      1    94%   4
+src/nnlogging/shell/exception/task_not_found.py        17      1    94%   4
+src/nnlogging/shell/protocol.py                        14      0   100%
+src/nnlogging/shell/shell.py                           58      1    98%   386
+src/nnlogging/shell/utils/__init__.py                   5      0   100%
+src/nnlogging/shell/utils/branch_funcs.py              30      2    93%   159, 162
+src/nnlogging/shell/utils/logger_funcs.py              49      0   100%
+src/nnlogging/shell/utils/run_funcs.py                 32      3    91%   88-90
+src/nnlogging/shell/utils/task_funcs.py                51      0   100%
+src/nnlogging/typings/__init__.py                       5      0   100%
+src/nnlogging/typings/aliases.py                       47      1    98%   17
+src/nnlogging/typings/exceptions.py                     4      0   100%
+src/nnlogging/typings/generics.py                      15      1    93%   8
+src/nnlogging/typings/protocols.py                      5      0   100%
+src/nnlogging/utils/__init__.py                         4      0   100%
+src/nnlogging/utils/helpers.py                         16      0   100%
+src/nnlogging/utils/rich_factories.py                  33      0   100%
+src/nnlogging/utils/shell_factories.py                 72      1    99%   156
+---------------------------------------------------------------------------------
+TOTAL                                                 520     13    98%
+Coverage HTML written to dir htmlcov
+- Generated html report: file:///home/amas/Projects/nnlogging/reports/test-report-3-10.html -
+============================= 249 passed in 5.62s ==============================

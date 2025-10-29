@@ -1,7 +1,16 @@
-"""nnlog"""
+"""
+Package: `nnlogging`
+Version: ``0.1.1``
+"""
 
-from . import shell
-from . import utils
+from .shell import Shell
+from .utils import LoggerConfig
 
+__all__ = ["Shell"]
 
-__all__ = ["shell", "utils"]
+shell = Shell(
+    "__nnlogging__",
+    logger_config=LoggerConfig(
+        name="__nnlogging__",
+    ),
+)

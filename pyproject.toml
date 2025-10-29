@@ -1,17 +1,21 @@
 [project]
 name = "nnlogging"
-version = "0.1.0"
+version = "0.1.1"
 description = "A powerful and elegant logging library designed specifically for neural network and machine learning experiments. nnlogging seamlessly integrates [Rich](https://github.com/Textualize/rich) for beautiful terminal output and [Aim](https://github.com/aimhubio/aim) for comprehensive experiment tracking."
 readme = "README.md"
-requires-python = ">=3.10,<3.13"
-dependencies = [
-    "aim>=3.29.0",
-    "rich>=14.0.0",
-]
+requires-python = ">=3.10, <3.13"
+dependencies = ["aim>=3.29.0", "rich>=14.0.0"]
 
 [project.optional-dependencies]
 dev = [
-    "twine>=6.2.0",
+  "faker>=37.11.0",
+  "pytest>=8.4.2",
+  "pytest-cov>=7.0.0",
+  "pytest-html>=4.1.1",
+  "pytest-repeat>=0.9.4",
+  "pytest-sugar>=1.1.1",
+  "pytest-xdist>=3.8.0",
+  "twine>=6.2.0",
 ]
 
 [build-system]
@@ -19,5 +23,16 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.basedpyright]
-pythonVersion = "3.12"
+pythonVersion = "3.10"
 pythonPlatform = "Linux"
+ignore = ["**__pycache__"]
+
+[[tool.basedpyright.executionEnvironments]]
+root = "tests"
+reportMissingParameterType = false
+reportUnknownParameterType = false
+reportUnknownArgumentType = false
+reportPrivateUsage = false
+
+[tool.pytest.ini_options]
+filterwarnings = ["ignore::DeprecationWarning"]
