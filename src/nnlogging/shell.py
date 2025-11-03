@@ -1,6 +1,7 @@
+import sys
 from collections.abc import Collection
 from logging import Formatter as LoggingFormatter, Logger as LoggingLogger
-from typing import Literal
+from typing import Literal, cast
 
 from aim import Repo as AimRepo, Run as AimRun
 from aim.sdk.types import AimObject
@@ -8,7 +9,18 @@ from rich.highlighter import Highlighter as RichHighlighter
 from rich.progress import ProgressColumn as RichProgressColumn
 from rich.theme import Theme as RichTheme
 
-from nnlogging.shell.utils import (
+from nnlogging.typings import (
+    Branch,
+    ConsolePrintOptions,
+    FormatTimeCallable,
+    LogOptions,
+    Omitable,
+    Sink,
+)
+from nnlogging.utils import (
+    BranchConfig,
+    LoggerConfig,
+    RunConfig,
     add_tag as _add_tag,
     advance as _advance,
     branch_add as _branch_add,
@@ -29,15 +41,8 @@ from nnlogging.shell.utils import (
     update_metadata as _update_metadata,
     warn as _warn,
 )
-from nnlogging.typings import (
-    Branch,
-    ConsolePrintOptions,
-    FormatTimeCallable,
-    LogOptions,
-    Omitable,
-    Sink,
-)
-from nnlogging.utils import BranchConfig, LoggerConfig, RunConfig
+
+global_shell = None
 
 
 class Shell:
@@ -423,3 +428,23 @@ class Shell:
             name,
             metadata,
         )
+
+
+def get_global_shell(sink: Sink | Literal["stderr", "stdout"] = "stderr"):
+    global global_shell
+    if global_shell is None:
+        global_shell = Shell()
+        if isinstance(sink, str) and sink in ("stderr", "stdout"):
+            sink = cast(Sink, getattr(sys, sink))
+        global_shell.branch_add("default", sink)
+        global_shell.debug(f'"global_shell" is now initialized as {repr(global_shell)}')
+    return global_shell
+
+
+def replace_global_shell(shell: Shell):
+    global global_shell
+    msg = f'"global_shell" has been replaced from {repr(global_shell)} to {repr(shell)}'
+    if global_shell is not None:
+        global_shell.info(msg)
+    global_shell = shell
+    global_shell.debug(msg)

@@ -6,13 +6,14 @@ from rich.highlighter import Highlighter as RichHighlighter
 from rich.progress import ProgressColumn as RichProgressColumn
 from rich.theme import Theme as RichTheme
 
-from nnlogging.shell.exception import (
+from nnlogging.shell_protocol import ShellProtocol
+from nnlogging.typings import FormatTimeCallable, Omitable, Sink
+from nnlogging.utils.exception import (
     raise_branch_exists_error,
     raise_branch_not_found_error,
 )
-from nnlogging.shell.protocol import ShellProtocol
-from nnlogging.typings import FormatTimeCallable, Omitable, Sink
-from nnlogging.utils import BranchConfig, evolve_, get_branch
+from nnlogging.utils.factory_funcs.shell_ import BranchConfig, get_branch
+from nnlogging.utils.helpers import evolve_
 
 
 def branch_configure(

@@ -1,13 +1,9 @@
-import sys
-
-from nnlogging.shell.exception import (
+from nnlogging.shell_protocol import ShellProtocol
+from nnlogging.utils.exception import (
     raise_task_exists_error,
     raise_task_not_found_error,
 )
-from nnlogging.shell.protocol import ShellProtocol
-from nnlogging.utils import get_rich_progress
-
-sys.version_info.major
+from nnlogging.utils.factory_funcs.rich_ import get_rich_progress
 
 
 def _task_open(

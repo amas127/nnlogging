@@ -2,9 +2,10 @@ import logging
 
 from rich.console import ConsoleRenderable as RichConsoleRenderable
 
-from nnlogging.shell.protocol import ShellProtocol
+from nnlogging.shell_protocol import ShellProtocol
 from nnlogging.typings import ConsolePrintOptions, LogOptions, Omitable
-from nnlogging.utils import LoggerConfig, evolve_, get_logging_logger
+from nnlogging.utils.factory_funcs.shell_ import LoggerConfig, get_logging_logger
+from nnlogging.utils.helpers import evolve_
 
 
 def _logger_open(

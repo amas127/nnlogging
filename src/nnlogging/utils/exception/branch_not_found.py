@@ -1,14 +1,13 @@
 import sys
 
+from nnlogging.shell_protocol import ShellProtocol
+from nnlogging.typings import BranchNotFoundError, LogOptions
+from nnlogging.utils.helpers import get__debugging, get_name
+
 if sys.version_info >= (3, 11):
     from typing import Never
 else:
     from typing_extensions import Never
-
-
-from nnlogging.shell.protocol import ShellProtocol
-from nnlogging.typings import BranchNotFoundError, LogOptions
-from nnlogging.utils import get__debugging, get_name
 
 
 def _branch_not_found_msg(

@@ -1,15 +1,24 @@
-from nnlogging import shell as default_shell
-from nnlogging.shell import Shell, ShellProtocol
+import nnlogging
+from nnlogging import Shell, get_default_shell, replace_default_shell
+from nnlogging.shell_protocol import ShellProtocol
 from nnlogging.utils import BranchConfig, LoggerConfig, RunConfig
 
 
-def test_default_shell():
+def test_get_default_shell(
+    default_shell_sink,
+    default_shell_logger_name,
+):
+    nnlogging.shell.default_shell = None
+    default_shell = get_default_shell(default_shell_sink)
+    default_shell.logger_configure(name=default_shell_logger_name)
+
     assert default_shell.logger is None
     assert default_shell.run is None
-    assert default_shell.branches == dict()
+    assert "default" in default_shell.branches
+    assert default_shell.branches["default"]["console"].file == default_shell_sink
 
-    assert default_shell.name == "__nnlogging__"
-    assert default_shell.logger_config == LoggerConfig(name=default_shell.name)
+    assert default_shell.name == "nnlogging"
+    assert default_shell.logger_config == LoggerConfig(name=default_shell_logger_name)
     assert default_shell.run_config == RunConfig()
     assert default_shell.branch_config == BranchConfig() and all(
         type(col1) == type(col2)
@@ -19,6 +28,15 @@ def test_default_shell():
     )
 
     assert isinstance(default_shell, ShellProtocol)
+
+
+def test_replace_default_shell():
+    nnlogging.shell.default_shell = None
+    _ = get_default_shell()
+    assert isinstance(nnlogging.shell.default_shell, Shell)
+    new_shell = Shell()
+    replace_default_shell(new_shell)
+    assert nnlogging.shell.default_shell is new_shell
 
 
 def test_shell_init(

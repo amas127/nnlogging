@@ -5,7 +5,7 @@ from aim import Run as AimRun
 from aim.sdk.types import AimObject
 
 from nnlogging.typings import Branch, LogOptions
-from nnlogging.utils import BranchConfig, LoggerConfig, RunConfig
+from nnlogging.utils.factory_funcs.shell_ import BranchConfig, LoggerConfig, RunConfig
 
 
 @runtime_checkable

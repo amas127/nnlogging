@@ -16,6 +16,16 @@ from rich.tree import Tree
 from nnlogging.utils import BranchConfig, LoggerConfig, RunConfig
 
 
+@pytest.fixture(params=["stderr", "stdout"])
+def default_shell_sink(request):
+    return getattr(sys, request.param)
+
+
+@pytest.fixture
+def default_shell_logger_name(shell_name_gen):
+    return shell_name_gen()
+
+
 @pytest.fixture
 def log_level_str_gen():
     levels = (

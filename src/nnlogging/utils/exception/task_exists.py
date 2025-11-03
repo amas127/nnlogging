@@ -1,13 +1,13 @@
 import sys
 
+from nnlogging.shell_protocol import ShellProtocol
+from nnlogging.typings import LogOptions, TaskExistsError
+from nnlogging.utils.helpers import get__debugging, get_name
+
 if sys.version_info >= (3, 11):
     from typing import Never
 else:
     from typing_extensions import Never
-
-from nnlogging.shell.protocol import ShellProtocol
-from nnlogging.typings import LogOptions, TaskExistsError
-from nnlogging.utils import get__debugging, get_name
 
 
 def _task_exists_msg(

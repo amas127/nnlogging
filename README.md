@@ -1,22 +1,22 @@
 # nnlogging
 
-A powerful logging library for neural network and machine learning experiments
-that combines [Rich](https://github.com/Textualize/rich) for beautiful terminal
-output with [Aim](https://github.com/aimhubio/aim) for comprehensive experiment
-tracking.
+[nnlogging](https://codeberg.org/nnaf/nnlogging) is a powerful, modern logging
+library for neural network and machine learning experiments, combining
+[Rich](https://github.com/Textualize/rich) for beautiful terminal output with
+[Aim](https://github.com/aimhubio/aim) for comprehensive experiment tracking.
 
 ## ✨ Features
 
-- 🎨 **Beautiful Console Output** - Rich-powered colorful logging with progress
-  bars
-- 📊 **Experiment Tracking** - Built-in Aim integration for metrics and
-  hyperparameters
-- 🔧 **Flexible Logging** - Multiple console handlers with customizable
-  formatting
-- 📈 **Progress Tracking** - Advanced progress bars for long-running training
-  loops
-- 🎯 **ML-Focused Design** - Purpose-built for machine learning workflows
-- 🐍 **Modern Python** - Python 3.10+ with full type hints
+- 🎨 **Beautiful Console Output** - Rich-powered colorful logging with
+  integrated progress bars.
+- 📊 **Effortless Experiment Tracking** - Seamless Aim integration for metrics,
+  parameters, and system monitoring.
+- 🔧 **Simplified API** - Get started in two lines of code with the global
+  shell.
+- 📈 **Advanced Progress Tracking** - Manage multiple progress bars for
+  training, validation, and other tasks.
+- 🎯 **ML-Focused Design** - Purpose-built for the machine learning workflow.
+- 🐍 **Modern Python** - Fully typed, Python 3.10+ codebase.
 
 ## 🚀 Installation
 
@@ -28,136 +28,101 @@ pip install nnlogging
 
 ## ⚡ Quick Start
 
+The new `nnlogging` API is designed for simplicity. You can get a
+pre-configured, global logger instance and start logging right away.
+
 ### Basic Logging
 
+Get the global shell or customize your shell from scratch to use logging methods
+and trackings.
+
 ```python
-from nnlogging import Shell
-from nnlogging.utils import get_rich_console
-import sys
+from nnlogging import get_global_shell
 
-# Initialize logger
-shell = Shell(name="my_experiment")
-shell.add_console({"main": get_rich_console(sys.stderr)})
-shell.build_handler_from_console()
+# 1. Get the global shell logger
+shell = get_global_shell()
 
-# Log messages
+# 2. Log messages!
 shell.info("Starting training...")
-shell.warn("Learning rate is high")
-shell.error("CUDA out of memory")
+shell.warn("Learning rate seems high.")
+shell.debug("This is a detailed debug message.")
+shell.error("CUDA out of memory.", extra={"show_locals": True})
 ```
 
-### Experiment Tracking
+### Experiment Tracking with Aim
+
+Configure the Aim run to track metrics, hyperparameters, and more.
 
 ```python
-# Initialize Aim tracking
-shell.add_aimrun(experiment="resnet_training")
+import random
+from nnlogging import get_global_shell
 
-# Track metrics during training
-for epoch in range(100):
-    train_loss, train_acc = train_epoch()
+shell = get_global_shell()
+
+# 1. Configure the experiment tracker
+shell.run_configure(
+    experiment="resnet_training",
+    log_system_params=True,      # Track CPU/GPU usage
+    capture_terminal_logs=True   # Save console output in Aim
+)
+
+# 2. Log hyperparameters
+config = {"lr": 0.001, "batch_size": 32, "model": "ResNet50"}
+shell.update_metadata("hparams", config)
+shell.info(f"Using config: {config}")
+
+# 3. Track metrics in your training loop
+for epoch in range(10):
+    train_loss = 1.0 / (epoch + 1) + random.random() * 0.1
     shell.track(train_loss, name="train_loss", epoch=epoch)
-    shell.track(train_acc, name="train_accuracy", epoch=epoch)
+    shell.info(f"Epoch {epoch}: Loss={train_loss:.4f}")
 
-    shell.info(f"Epoch {epoch}: Loss={train_loss:.4f}, Acc={train_acc:.3f}")
-
-# Track hyperparameters
-shell.update_aimrun_metadata("config", {
-    "learning_rate": 0.001,
-    "batch_size": 32,
-    "model": "ResNet50"
-})
+shell.info("Experiment finished!")
 ```
+
+To view the results, run `aim up` in your terminal.
 
 ### Progress Tracking
 
-```python
-# Setup progress bars
-shell.build_progress_from_console("main")
-shell.add_task("training", description="Training", total=1000)
-shell.start_progress()
+Add tasks to the logger to display and update rich progress bars.
 
-# Update during training loop
-for step in range(1000):
-    loss = train_step()
-    shell.update_task("training", advance=1)
+```python
+import time
+from nnlogging import get_global_shell
+
+shell = get_global_shell()
+
+# 1. Add a task to the progress display
+shell.task_add("training", desc="Training", total=500)
+
+# 2. Update the task during your training loop
+for step in range(500):
+    # training_step()
+    time.sleep(0.01)
+    shell.advance("training", 1)
 
     if step % 100 == 0:
-        shell.info(f"Step {step}: Loss={loss:.4f}")
+        shell.info(f"Completed step {step}")
 
-shell.stop_progress()
-```
-
-### Complete Training Example
-
-```python
-from nnlogging import Shell
-from nnlogging.utils import get_rich_console
-import sys
-
-# Setup logging with both console and experiment tracking
-shell = Shell(name="training")
-shell.add_console({"console": get_rich_console(sys.stdout)})
-shell.build_handler_from_console()
-shell.build_progress_from_console()
-
-# Initialize experiment tracking
-shell.add_aimrun(
-    experiment="mnist_cnn",
-    log_system_params=True,
-    capture_terminal_logs=True
-)
-
-# Log hyperparameters
-config = {"lr": 0.001, "batch_size": 64, "epochs": 10}
-shell.update_aimrun_metadata("hparams", config)
-shell.info(f"Starting training with config: {config}")
-
-# Training loop with progress tracking
-shell.add_task("epochs", description="Epochs", total=config["epochs"])
-shell.start_progress()
-
-for epoch in range(config["epochs"]):
-    # Training phase
-    train_loss, train_acc = train_model()
-    shell.track(train_loss, name="train_loss", epoch=epoch)
-    shell.track(train_acc, name="train_acc", epoch=epoch)
-
-    # Validation phase
-    val_loss, val_acc = validate_model()
-    shell.track(val_loss, name="val_loss", epoch=epoch)
-    shell.track(val_acc, name="val_acc", epoch=epoch)
-
-    shell.update_task("epochs", advance=1)
-    shell.info(f"Epoch {epoch}: Train Loss={train_loss:.3f}, Val Acc={val_acc:.3f}")
-
-shell.stop_progress()
-shell.info("Training completed! 🎉")
+# 3. Remove the task when finished
+shell.task_remove("training")
+shell.info("Training complete!")
 ```
 
 ## 🔄 Workflow
 
-![Workflow Overview](assets/workflow-overview.png)
-
-1. **Initialize** - Create Shell instance for your experiment
-2. **Configure** - Add consoles and progress tracking
-3. **Track** - Connect to Aim for experiment tracking
-4. **Train & Log** - Use throughout your ML pipeline
-5. **Visualize** - View results in Aim's web interface with `aim up`
-
-## 🌍 Environments
-
-nnlogging works seamlessly across different environments:
-
-- **Local Development** - Full Rich terminal output with colors and formatting
-- **Jupyter Notebooks** - Integrated display with notebook-friendly rendering
-- **Remote Servers** - Automatic fallback for limited terminal capabilities
-- **CI/CD Pipelines** - Clean text output when Rich features aren't supported
-- **Docker Containers** - Optimized for containerized ML workloads
+1. **`get_global_shell()`** - Get the logger instance at the start of your
+   script.
+2. **`run_configure()`** - (Optional) Configure Aim for experiment tracking.
+3. **Log & Track** - Use `shell.info()`, `shell.track()`, and `shell.advance()`
+   throughout your code.
+4. **Visualize** - Run `aim up` to launch the Aim UI and analyze your results.
 
 ## 🤝 Contributing
 
-Contributions welcome! Please open an issue for major changes.
+Contributions are welcome! Please feel free to open an issue or submit a pull
+request.
 
 ## 📄 License
 
-MIT License
+This project is licensed under the MIT License.

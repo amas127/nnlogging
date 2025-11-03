@@ -10,12 +10,12 @@ from rich.progress import ProgressColumn as RichProgressColumn
 from rich.theme import Theme as RichTheme
 
 from nnlogging.typings import Branch, FormatTimeCallable, Omitable, Sink
-from nnlogging.utils.helpers import evolve_, or_
-from nnlogging.utils.rich_factories import (
+from nnlogging.utils.factory_funcs.rich_ import (
     get_rich_console,
     get_rich_handler,
     get_rich_progress_default_columns,
 )
+from nnlogging.utils.helpers import evolve_, or_
 
 
 @dataclass(slots=True, kw_only=True)

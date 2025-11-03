@@ -1,9 +1,10 @@
 from aim import Repo as AimRepo
 from aim.sdk.types import AimObject
 
-from nnlogging.shell.protocol import ShellProtocol
+from nnlogging.shell_protocol import ShellProtocol
 from nnlogging.typings import Omitable
-from nnlogging.utils import RunConfig, evolve_, get_aim_run
+from nnlogging.utils.factory_funcs.shell_ import RunConfig, get_aim_run
+from nnlogging.utils.helpers import evolve_
 
 
 def _run_open(

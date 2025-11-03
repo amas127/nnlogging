@@ -24,6 +24,7 @@ def test_console_print(
     console = Console(
         force_terminal=force_terminal,
         file=stringio_sink,
+        width=1024,
     )
     msg = message_gen()
     console.print(msg)
@@ -39,6 +40,7 @@ def test_console_log(
     console = Console(
         force_terminal=force_terminal,
         file=stringio_sink,
+        width=1024,
     )
     msg = message_gen()
     console.log(msg)
@@ -54,6 +56,7 @@ def test_console_capture(
     console = Console(
         force_terminal=force_terminal,
         file=stringio_sink,
+        width=1024,
     )
     msg = message_gen()
     with console.capture() as capture:
