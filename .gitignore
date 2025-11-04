@@ -22,6 +22,7 @@ d2/
 # Test
 htmlcov
 .coverage
+reports/
 
 # js
 node_modules/

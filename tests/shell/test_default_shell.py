@@ -1,5 +1,5 @@
 import nnlogging
-from nnlogging import Shell, get_default_shell, replace_default_shell
+from nnlogging import Shell, get_global_shell, replace_global_shell
 from nnlogging.shell_protocol import ShellProtocol
 from nnlogging.utils import BranchConfig, LoggerConfig, RunConfig
 
@@ -8,8 +8,8 @@ def test_get_default_shell(
     default_shell_sink,
     default_shell_logger_name,
 ):
-    nnlogging.shell.default_shell = None
-    default_shell = get_default_shell(default_shell_sink)
+    nnlogging.shell._current_shell = None
+    default_shell = get_global_shell(default_shell_sink)
     default_shell.logger_configure(name=default_shell_logger_name)
 
     assert default_shell.logger is None
@@ -31,12 +31,12 @@ def test_get_default_shell(
 
 
 def test_replace_default_shell():
-    nnlogging.shell.default_shell = None
-    _ = get_default_shell()
-    assert isinstance(nnlogging.shell.default_shell, Shell)
+    nnlogging.shell._current_shell = None
+    _ = get_global_shell()
+    assert isinstance(nnlogging.shell._current_shell, Shell)
     new_shell = Shell()
-    replace_default_shell(new_shell)
-    assert nnlogging.shell.default_shell is new_shell
+    replace_global_shell(new_shell)
+    assert nnlogging.shell._current_shell is new_shell
 
 
 def test_shell_init(

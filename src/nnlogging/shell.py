@@ -1,4 +1,5 @@
 import sys
+import threading
 from collections.abc import Collection
 from logging import Formatter as LoggingFormatter, Logger as LoggingLogger
 from typing import Literal, cast
@@ -9,6 +10,7 @@ from rich.highlighter import Highlighter as RichHighlighter
 from rich.progress import ProgressColumn as RichProgressColumn
 from rich.theme import Theme as RichTheme
 
+import nnlogging
 from nnlogging.typings import (
     Branch,
     ConsolePrintOptions,
@@ -41,8 +43,6 @@ from nnlogging.utils import (
     update_metadata as _update_metadata,
     warn as _warn,
 )
-
-global_shell = None
 
 
 class Shell:
@@ -430,21 +430,27 @@ class Shell:
         )
 
 
+_current_shell_lock: threading.Lock = threading.Lock()
+_current_shell: Shell | None = None
+
+
 def get_global_shell(sink: Sink | Literal["stderr", "stdout"] = "stderr"):
-    global global_shell
-    if global_shell is None:
-        global_shell = Shell()
-        if isinstance(sink, str) and sink in ("stderr", "stdout"):
-            sink = cast(Sink, getattr(sys, sink))
-        global_shell.branch_add("default", sink)
-        global_shell.debug(f'"global_shell" is now initialized as {repr(global_shell)}')
-    return global_shell
+    if nnlogging.shell._current_shell is None:
+        with nnlogging.shell._current_shell_lock:
+            shell = Shell()
+            if isinstance(sink, str) and sink in ("stderr", "stdout"):
+                sink = cast(Sink, getattr(sys, sink))
+            shell.branch_add("default", sink)
+            shell.debug(f'"global_shell" is now initialized as {repr(shell)}')
+            nnlogging.shell._current_shell = shell
+    return nnlogging.shell._current_shell
 
 
 def replace_global_shell(shell: Shell):
-    global global_shell
-    msg = f'"global_shell" has been replaced from {repr(global_shell)} to {repr(shell)}'
-    if global_shell is not None:
-        global_shell.info(msg)
-    global_shell = shell
-    global_shell.debug(msg)
+    with nnlogging.shell._current_shell_lock:
+        current_shell = nnlogging.shell._current_shell
+        msg = f'"global_shell" has been replaced from {repr(current_shell)} to {repr(shell)}'
+        if current_shell is not None:
+            current_shell.info(msg)
+        nnlogging.shell._current_shell = shell
+        shell.debug(msg)
