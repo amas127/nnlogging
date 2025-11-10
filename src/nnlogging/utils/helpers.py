@@ -1,39 +1,74 @@
-from dataclasses import replace
-from types import EllipsisType
+import threading
+from collections.abc import Mapping
+from typing import Any, TypeVar, cast
 
-from nnlogging.typings import DataclassT, Omitable, T
-
-
-def or_(
-    value: Omitable[T],
-    default: T,
-    /,
-) -> T:
-    return default if isinstance(value, EllipsisType) else value
-
-
-def evolve_(
-    inst: DataclassT,
-    /,
-    **kwargs: object,
-) -> DataclassT:
-    evolutions = {k: v for k, v in kwargs.items() if not isinstance(v, EllipsisType)}
-    return replace(inst, **evolutions)
+from nnlogging.options import (
+    LoggingLogOptionDict,
+    LogOptionDict,
+    RichConsoleOptionDict,
+    RichHandlerOptionDict,
+    RichPrintOptionDict,
+    RichProgressOptionDict,
+)
 
 
 def get_name(
     inst: object,
     /,
-):
-    inst_name = getattr(inst, "name", str(inst))
-    assert isinstance(inst_name, str)
-    return inst_name
+) -> object:
+    return getattr(inst, "name", inst)
 
 
-def get__debugging(
-    inst: object,
+LogOptionT = TypeVar(
+    "LogOptionT",
+    bound=LogOptionDict | LoggingLogOptionDict | dict[str, Any],
+)
+
+
+def inc_stacklevel(
+    dct: LogOptionT,
     /,
-):
-    inst_debugging = getattr(inst, "_debugging", False)
-    assert isinstance(inst_debugging, bool)
-    return inst_debugging
+) -> LogOptionT:
+    if "stacklevel" in dct:
+        dct["stacklevel"] = dct["stacklevel"] + 1
+    return dct
+
+
+def inject_excinfo(
+    dct: LogOptionT,
+    e: BaseException | bool = True,
+    /,
+) -> LogOptionT:
+    if "exc_info" not in dct:
+        dct["exc_info"] = e
+    return dct
+
+
+TypedDictT = TypeVar(
+    "TypedDictT",
+    bound=RichConsoleOptionDict
+    | RichHandlerOptionDict
+    | RichProgressOptionDict
+    | LoggingLogOptionDict
+    | RichPrintOptionDict,
+)
+
+
+def filter_by_typeddict(
+    dct: Mapping[str, object],
+    /,
+    typpeddict: type[TypedDictT],
+) -> TypedDictT:
+    keys = typpeddict.__annotations__.keys()
+    return cast(TypedDictT, {k: v for k, v in dct.items() if k in keys})  # pyright: ignore[reportInvalidCast]
+
+
+def with_lock(lock: threading.Lock):
+    def decorator(f):
+        def wrapper(*args, **kwargs):
+            with lock:
+                return f(*args, **kwargs)
+
+        return wrapper
+
+    return decorator

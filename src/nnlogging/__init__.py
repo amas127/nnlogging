@@ -1,16 +1,4 @@
-"""
-Package: `nnlogging`
-Version: ``0.1.1``
-"""
+from .global_ import *
+from .shell import Shell
 
-from .shell import (
-    Shell,
-    get_global_shell,
-    replace_global_shell,
-)
-
-__all__ = [
-    "Shell",
-    "get_global_shell",
-    "replace_global_shell",
-]
+__all__ = ["Shell"]

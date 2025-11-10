@@ -1,6 +1,6 @@
 [project]
 name = "nnlogging"
-version = "0.1.2"
+version = "0.1.4"
 description = "A powerful and elegant logging library designed specifically for neural network and machine learning experiments. nnlogging seamlessly integrates [Rich](https://github.com/Textualize/rich) for beautiful terminal output and [Aim](https://github.com/aimhubio/aim) for comprehensive experiment tracking."
 readme = "README.md"
 requires-python = ">=3.10, <3.13"
@@ -22,16 +22,17 @@ dev = [
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[tool.basedpyright]
-pythonVersion = "3.10"
+[tool.pyright]
+pythonVersion = "3.12"
 pythonPlatform = "Linux"
-ignore = ["**__pycache__"]
+ignore = ["**/__pycache__"]
+include = ["src"]
 
-[[tool.basedpyright.executionEnvironments]]
+[[tool.pyright.executionEnvironments]]
 root = "src"
 reportMissingTypeStubs = false
 
-[[tool.basedpyright.executionEnvironments]]
+[[tool.pyright.executionEnvironments]]
 root = "tests"
 reportMissingParameterType = false
 reportUnknownParameterType = false
