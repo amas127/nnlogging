@@ -18,6 +18,7 @@ uv.lock
 .python-version
 main.py
 d2/
+.obsidian
 
 # Test
 htmlcov

@@ -60,7 +60,7 @@ def test_task_add_duplicate(
     task_total_gen,
 ):
     task_name = task_name_gen()
-    shell = Shell()
+    shell = Shell(strict=True)
     shell.branch_add("default")
     shell.task_add(
         task_name,
@@ -76,7 +76,7 @@ def test_task_add_duplicate(
 
 
 def test_task_remove_not_found(task_name_gen):
-    shell = Shell()
+    shell = Shell(strict=True)
     shell.branch_add("default")
     with pytest.raises(TaskNotFoundError):
         shell.task_remove(task_name_gen())

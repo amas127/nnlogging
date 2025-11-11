@@ -20,7 +20,7 @@ def test_branch_add_normal(
 def test_branch_add_duplicate(
     branch_name,
 ):
-    shell = Shell()
+    shell = Shell(strict=True)
     shell.branch_add(branch_name)
     with pytest.raises(BranchExistsError):
         shell.branch_add(branch_name)
@@ -37,6 +37,6 @@ def test_branch_remove_normal(
 def test_branch_remove_not_found(
     branch_name,
 ):
-    shell = Shell()
+    shell = Shell(strict=True)
     with pytest.raises(BranchNotFoundError):
         shell.branch_remove(branch_name)

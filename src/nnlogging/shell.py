@@ -30,6 +30,7 @@ class Shell:
         logger_config: LoggerConfigOption | None = None,
         run_config: RunConfigOption | None = None,
         branch_config: BranchConfigOption | None = None,
+        strict: bool = False,
     ):
         self.logger: LoggingLogger | None = None
         self.run: AimRun | None = None
@@ -41,6 +42,8 @@ class Shell:
         )
         self.run_config: RunConfigOption = run_config or RunConfigOption()
         self.branch_config: BranchConfigOption = branch_config or BranchConfigOption()
+
+        self.strict: bool = strict
 
     def logger_configure(
         self,

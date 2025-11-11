@@ -3,8 +3,8 @@ from dataclasses import asdict, replace
 from typing import Literal, cast
 
 from nnlogging.exceptions import (
-    raise_branch_exists_error,
-    raise_branch_not_found_error,
+    call_branch_exists_error,
+    call_branch_not_found_error,
 )
 from nnlogging.options import BranchConfigOptionDict
 from nnlogging.typings.exts import Unpack
@@ -35,20 +35,24 @@ def branch_add(
     **kwargs: Unpack[BranchConfigOptionDict],
 ):
     if name in inst.branches:
-        raise_branch_exists_error(
+        e = call_branch_exists_error(
             inst,
             name,
             stacklevel=2,
         )
-    if isinstance(sink, str) and sink in ("stderr", "stdout"):
-        sink = cast(Sink, getattr(sys, sink))
-    branch = get_branch(
-        sink,
-        **(asdict(inst.branch_config) | kwargs),  # pyright: ignore[reportArgumentType]
-    )
-    inst.branches[name] = branch
-    if inst.logger is not None:
-        inst.logger.addHandler(branch["handler"])
+        if inst.strict:
+            raise e
+
+    else:
+        if isinstance(sink, str) and sink in ("stderr", "stdout"):
+            sink = cast(Sink, getattr(sys, sink))
+        branch = get_branch(
+            sink,
+            **(asdict(inst.branch_config) | kwargs),  # pyright: ignore[reportArgumentType]
+        )
+        inst.branches[name] = branch
+        if inst.logger is not None:
+            inst.logger.addHandler(branch["handler"])
 
 
 def branch_remove(
@@ -56,17 +60,20 @@ def branch_remove(
     name: str,
 ):
     if name not in inst.branches:
-        raise_branch_not_found_error(
+        e = call_branch_not_found_error(
             inst,
             name,
             stacklevel=2,
         )
+        if inst.strict:
+            raise e
 
-    branch = inst.branches[name]
-    branch["handler"].close()
-    branch["tasks"].clear()
-    if branch["progress"] is not None:
-        branch["progress"].stop()
-    if inst.logger is not None:
-        inst.logger.removeHandler(branch["handler"])
-    del inst.branches[name]
+    else:
+        branch = inst.branches[name]
+        branch["handler"].close()
+        branch["tasks"].clear()
+        if branch["progress"] is not None:
+            branch["progress"].stop()
+        if inst.logger is not None:
+            inst.logger.removeHandler(branch["handler"])
+        del inst.branches[name]

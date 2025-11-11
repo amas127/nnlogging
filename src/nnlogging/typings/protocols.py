@@ -45,6 +45,7 @@ class ShellProtocol(ExceptionProtocol, Protocol):
     logger_config: LoggerConfigOption
     run_config: RunConfigOption
     branch_config: BranchConfigOption
+    strict: bool
 
     def log(
         self,

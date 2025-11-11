@@ -1,6 +1,6 @@
 from dataclasses import asdict
 
-from nnlogging.exceptions import raise_task_exists_error, raise_task_not_found_error
+from nnlogging.exceptions import call_task_exists_error, call_task_not_found_error
 from nnlogging.options import RichProgressOptionDict, TaskOptionDict
 from nnlogging.typings.exts import Unpack
 from nnlogging.typings.protocols import ShellProtocol
@@ -21,22 +21,26 @@ def _task_open(
     for branch_name in inst.branches:
         branch = inst.branches[branch_name]
         if name in branch["tasks"]:
-            raise_task_exists_error(
+            e = call_task_exists_error(
                 inst,
                 branch_name,
                 name,
                 stacklevel=2,
             )
-        if branch["progress"] is None:
-            progress = get_rich_progress(
-                branch["console"],
-                **filter_by_typeddict(
-                    asdict(inst.branch_config),
-                    RichProgressOptionDict,
-                ),
-            )
-            progress.start()
-            branch["progress"] = progress
+            if inst.strict:
+                raise e
+
+        else:
+            if branch["progress"] is None:
+                progress = get_rich_progress(
+                    branch["console"],
+                    **filter_by_typeddict(
+                        asdict(inst.branch_config),
+                        RichProgressOptionDict,
+                    ),
+                )
+                progress.start()
+                branch["progress"] = progress
 
 
 def _task_close(
@@ -56,11 +60,13 @@ def _task_close(
                 branch["progress"].stop()
                 branch["progress"] = None
     if not _task_found:
-        raise_task_not_found_error(
+        e = call_task_not_found_error(
             inst,
             name,
             stacklevel=2,
         )
+        if inst.strict:
+            raise e
 
 
 def task_add(
