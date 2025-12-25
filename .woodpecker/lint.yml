@@ -1,0 +1,52 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    settings:
+      depth: 1
+      recursive: false
+      lfs: false
+
+steps:
+  taplo:
+    image: astral/uv:bookworm-slim
+    commands:
+      - uv tool install --quiet taplo
+      - uv tool run taplo format --check --diff
+      - uv tool run taplo lint
+    when:
+      event: [push, manual]
+    depends_on: []
+
+  yamllint:
+    image: registry.gitlab.com/pipeline-components/yamllint:latest
+    commands:
+      - yamllint .yamllint.yml .woodpecker/
+    when:
+      event: [push, manual]
+    depends_on: []
+
+  ruff:
+    image: registry.gitlab.com/pipeline-components/ruff:latest
+    commands:
+      - ruff format --check --diff
+      - ruff check --no-fix --show-fixes --unsafe-fixes
+    when:
+      event: [push, manual]
+    depends_on: []
+
+  pylint:
+    image: registry.gitlab.com/pipeline-components/pylint:latest
+    commands:
+      - pip install --quiet --no-deps .
+      - pylint src/
+    when:
+      event: [push, manual]
+    depends_on: []
+
+  sqlfluff:
+    image: sqlfluff/sqlfluff:latest
+    commands:
+      - sqlfluff lint --dialect duckdb src/
+    when:
+      event: [push, manual]
+    depends_on: []

@@ -1,20 +1,22 @@
 # nnlogging
 
+[![status-badge](https://ci.codeberg.org/api/badges/15742/status.svg)](https://ci.codeberg.org/repos/15742)
 ![PyPI - Version](https://img.shields.io/pypi/v/nnlogging)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/nnlogging)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/nnlogging)
-![GitHub License](https://img.shields.io/github/license/amas127/nnlogging)
+![PyPI - License](https://img.shields.io/pypi/l/nnlogging)
 
 [nnlogging](https://codeberg.org/nnaf/nnlogging) is a powerful, modern logging
 library for neural network and machine learning experiments, combining
 [Rich](https://github.com/Textualize/rich) for beautiful terminal output with
-[Aim](https://github.com/aimhubio/aim) for comprehensive experiment tracking.
+parquet-based experiment tracking and [DVC](https://dvc.org) for artifact
+management.
 
 ## ✨ Features
 
 - 🎨 **Beautiful Console Output** - Rich-powered colorful logging with
   integrated progress bars.
-- 📊 **Effortless Experiment Tracking** - Seamless Aim integration for metrics,
+- 📊 **Effortless Experiment Tracking** - Parquet table integration for metrics,
   parameters, and system monitoring.
 - 🔧 **Simplified API** - Get started in one line of code with the global
   functions.
@@ -51,9 +53,10 @@ nnlogging.debug("This is a detailed debug message.")
 nnlogging.error("CUDA out of memory.", extra={"show_locals": True})
 ```
 
-### Experiment Tracking with Aim
+### Experiment Tracking with Parquet Tables
 
-Configure the Aim run to track metrics, hyperparameters, and more.
+Configure experiment tracking to store metrics, hyperparameters, and more in
+parquet tables.
 
 ```python
 import random
@@ -63,7 +66,7 @@ import nnlogging
 nnlogging.run_configure(
     experiment="resnet_training",
     log_system_params=True,      # Track CPU/GPU usage
-    capture_terminal_logs=True   # Save console output in Aim
+    capture_terminal_logs=True   # Save console output
 )
 
 # 2. Log hyperparameters
@@ -80,7 +83,7 @@ for epoch in range(10):
 nnlogging.info("Experiment finished!")
 ```
 
-To view the results, run `aim up` in your terminal.
+Data is automatically saved to parquet files in the experiment directory.
 
 ### Progress Tracking
 
@@ -111,10 +114,12 @@ nnlogging.info("Training complete!")
 
 1. **Import `nnlogging`** - Import the `nnlogging` library at the start of your
    script.
-2. **`run_configure()`** - (Optional) Configure Aim for experiment tracking.
+2. **`run_configure()`** - (Optional) Configure parquet-based experiment
+   tracking.
 3. **Log & Track** - Use `nnlogging.info()`, `nnlogging.track()`, and
    `nnlogging.advance()` throughout your code.
-4. **Visualize** - Run `aim up` to launch the Aim UI and analyze your results.
+4. **Analyze** - Access parquet files directly or use tools like DuckDB for
+   analysis.
 
 ## 🤝 Contributing
 

@@ -1,0 +1,30 @@
+line-length = 88
+indent-width = 4
+include = ["src/**/*.{py,pyi}"]
+exclude = ["**/__pycache__", "**/site-packages"]
+
+[format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 60
+skip-magic-trailing-comma = false
+line-ending = "lf"
+
+[lint]
+preview = true
+select = ["ALL"]
+typing-modules = ["nnlogging.typings.exts"]
+ignore = ["F403", "D", "COM812", "COM819", "CPY", "FIX"]
+
+[lint.per-file-ignores]
+"tests/**" = ["D", "C901", "PLC2701", "PLR", "S101", "ANN", "INP001"]
+
+[lint.isort]
+case-sensitive = true
+combine-as-imports = true
+force-single-line = false
+lines-after-imports = 2
+force-wrap-aliases = true
+lines-between-types = 0
+order-by-type = true

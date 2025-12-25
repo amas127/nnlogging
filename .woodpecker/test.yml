@@ -1,0 +1,20 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    settings:
+      depth: 1
+      recursive: false
+      lfs: false
+
+steps:
+  pytest:
+    image: astral/uv:bookworm-slim
+    commands:
+      - uv sync --quiet --extra=pytest
+      - uv run dvc init --no-scm .
+      - >-
+        uv run pytest tests/
+        --cov=src/ --cov-report="term-missing" --cov-branch --cov-fail-under=80
+
+    when:
+      event: [pull_request]

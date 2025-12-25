@@ -6,11 +6,13 @@ dist/
 wheels/
 *.egg-info
 .venv/
+/*.py
 
 # lock
 uv.lock
 
-.aim/
+.envrc
+.dvc/
 .zed/
 .ipynb_checkpoints/
 .pytest_cache/
@@ -19,6 +21,7 @@ uv.lock
 main.py
 d2/
 .obsidian
+.dvcignore
 
 # Test
 htmlcov
@@ -29,3 +32,7 @@ reports/
 node_modules/
 package.json
 package-lock.json
+
+# agent
+prompts/
+agents/

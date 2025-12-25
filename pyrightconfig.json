@@ -1,0 +1,29 @@
+{
+  "pythonVersion": "3.10",
+  "pythonPlatform": "Linux",
+  "exclude": ["**/__pycache__", ".venv"],
+  "ignore": [".venv"],
+  "include": ["src", "tests"],
+  "typeCheckingMode": "recommended",
+  "executionEnvironments": [
+    {
+      "root": "src/nnlogging/funcs/db_",
+      "reportUnusedCallResult": false,
+      "reportMissingTypeStubs": false
+    },
+    {
+      "root": "src",
+      "reportMissingTypeStubs": false
+    },
+    {
+      "root": "tests",
+      "reportMissingParameterType": false,
+      "reportUnknownParameterType": false,
+      "reportUnknownArgumentType": false,
+      "reportPrivateUsage": false,
+      "reportMissingTypeStubs": false,
+      "reportUnusedCallResult": false,
+      "reportUnknownVariableType": false
+    }
+  ]
+}

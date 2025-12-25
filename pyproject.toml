@@ -1,44 +1,39 @@
 [project]
 name = "nnlogging"
-version = "0.1.4"
-description = "A powerful and elegant logging library designed specifically for neural network and machine learning experiments. nnlogging seamlessly integrates [Rich](https://github.com/Textualize/rich) for beautiful terminal output and [Aim](https://github.com/aimhubio/aim) for comprehensive experiment tracking."
+version = "0.2.0"
+description = "A powerful and elegant logging library designed specifically for neural network and machine learning experiments."
 readme = "README.md"
-requires-python = ">=3.10, <3.13"
-dependencies = ["aim>=3.29.0", "rich>=14.0.0"]
+requires-python = ">=3.10"
+authors = [{ name = "amas127", email = "amadeusxu127@gmail.com" }]
+keywords = ["experiment", "logging", "machine learning"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = [
+  "blake3>=1",
+  "duckdb>=1.4.0",
+  "dvc>=3",
+  "numpy>=2",
+  "orjson>=3.10.0",
+  "rich>=14.0.0",
+]
+
+[project.urls]
+Issues = "https://codeberg.org/amas127/nnlogging/issues"
+Repository = "https://codeberg.org/amas127/nnlogging.git"
 
 [project.optional-dependencies]
-dev = [
-  "faker>=37.11.0",
-  "pytest>=8.4.2",
-  "pytest-cov>=7.0.0",
-  "pytest-html>=4.1.1",
-  "pytest-repeat>=0.9.4",
-  "pytest-sugar>=1.1.1",
-  "pytest-xdist>=3.8.0",
-  "twine>=6.2.0",
-]
+pytest = ["faker>=37", "pytest>=8", "pytest-cov>=7"]
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
-
-[tool.pyright]
-pythonVersion = "3.12"
-pythonPlatform = "Linux"
-ignore = ["**/__pycache__"]
-include = ["src"]
-
-[[tool.pyright.executionEnvironments]]
-root = "src"
-reportMissingTypeStubs = false
-
-[[tool.pyright.executionEnvironments]]
-root = "tests"
-reportMissingParameterType = false
-reportUnknownParameterType = false
-reportUnknownArgumentType = false
-reportPrivateUsage = false
-reportMissingTypeStubs = false
-
-[tool.pytest.ini_options]
-filterwarnings = ["ignore::DeprecationWarning"]

@@ -1,4 +1,4 @@
-from .global_ import *
-from .shell import Shell
+__version__ = "0.2.0"
 
-__all__ = ["Shell"]
+from ._global import *
+from .shell import *
