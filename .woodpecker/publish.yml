@@ -7,23 +7,18 @@ clone:
       lfs: false
 
 steps:
-  build:
+  build-and-publish:
     image: astral/uv:bookworm-slim
+    environment:
+      UV_PUBLISH_URL: https://upload.pypi.org/legacy/
+      UV_PUBLISH_TOKEN:
+        from_secret: pypi-publish
     commands:
-      - uv build --quiet --wheel
+      - uv build --wheel
+      - uv publish
     when:
       event: release
     depends_on: []
-
-  publish:
-    image: gitea.elara.ws/music-kraken/plugin-twine
-    settings:
-      username: __token__
-      password:
-        from_secret: pypi-publish
-    depends_on: [build]
-    when:
-      event: release
 
 when:
   branch: main
