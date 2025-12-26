@@ -4,6 +4,7 @@ version = "0.2.0a1"
 description = "A powerful and elegant logging library designed specifically for neural network and machine learning experiments."
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 authors = [{ name = "amas127", email = "amadeusxu127@gmail.com" }]
 keywords = ["experiment", "logging", "machine learning"]
 classifiers = [
