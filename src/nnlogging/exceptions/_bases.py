@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from nnlogging.typings._exts import override
+from nnlogging.typings import override
 
 
 class _MsgPromptScopeError(Exception):

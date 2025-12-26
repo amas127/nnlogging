@@ -4,9 +4,12 @@ from uuid import UUID
 
 import duckdb
 
-from nnlogging.exceptions import RunDuplicatePrimaryKeyError
-from nnlogging.exceptions._exceptions import RunNotUniqueError, RunNullColError
-from nnlogging.typings._db import DuckConnection, ExperimentRun
+from nnlogging.exceptions import (
+    RunDuplicatePrimaryKeyError,
+    RunNotUniqueError,
+    RunNullColError,
+)
+from nnlogging.typings import DuckConnection, ExperimentRun
 
 
 __all__ = ["create_run", "create_tables"]

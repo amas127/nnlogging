@@ -19,6 +19,7 @@ from nnlogging.options import (
     HandlerSetupFullOpt,
     LogFullOpt,
     LogParOpt,
+    LoggerFullOpt,
     LoggerParOpt,
     ProgressFullOpt,
     ProgressParOpt,
@@ -30,7 +31,6 @@ from nnlogging.options import (
     TaskFullOpt,
     TaskParOpt,
 )
-from nnlogging.options._logger import LoggerFullOpt
 from nnlogging.typings import (
     Artifact,
     Branches,
@@ -40,6 +40,7 @@ from nnlogging.typings import (
     Level,
     RichConsoleRenderable,
     Sink,
+    Status,
     StepTrack,
     StrPath,
     Unpack,
@@ -68,7 +69,6 @@ class Shell:  # noqa: PLR0904
         render_opt: RenderParOpt | None = None,
         capture_warning_opt: CapwarnParOpt | None = None,
         capture_exception_opt: CapexcParOpt | None = None,
-        logger_opt: LoggerParOpt | None = None,
         run_opt: RunParOpt | None = None,
     ) -> None:
         self.name: str = name
@@ -83,46 +83,59 @@ class Shell:  # noqa: PLR0904
         self.render_opt: RenderParOpt = render_opt or {}
         self.capture_warning_opt: CapwarnParOpt = capture_warning_opt or {}
         self.capture_exception_opt: CapexcParOpt = capture_exception_opt or {}
-        self.logger_opt: LoggerParOpt | None = logger_opt
-        self.run_opt: RunParOpt | None = run_opt
 
+        self.run_opt: RunParOpt | None = run_opt
         self.db_connection: DuckConnection | None = None
         self.storage_dir: Path | None = None
 
         if self.run_opt:
             self.configure_run(**self.run_opt)
 
-    def configure_console(self, **kwargs: Unpack[ConsoleParOpt]) -> None:
+    def configure_console(
+        self, **kwargs: Unpack[ConsoleParOpt]
+    ) -> None:  # pragma: no cover
         self.console_opt |= kwargs
 
-    def configure_handler(self, **kwargs: Unpack[HandlerParOpt]) -> None:
+    def configure_handler(
+        self, **kwargs: Unpack[HandlerParOpt]
+    ) -> None:  # pragma: no cover
         self.handler_opt |= kwargs
 
-    def configure_filter(self, **kwargs: Unpack[FilterParOpt]) -> None:
+    def configure_filter(
+        self, **kwargs: Unpack[FilterParOpt]
+    ) -> None:  # pragma: no cover
         self.filter_opt |= kwargs
 
-    def configure_progress(self, **kwargs: Unpack[ProgressParOpt]) -> None:
+    def configure_progress(
+        self, **kwargs: Unpack[ProgressParOpt]
+    ) -> None:  # pragma: no cover
         self.progress_opt |= kwargs
 
-    def configure_log(self, **kwargs: Unpack[LogParOpt]) -> None:
+    def configure_log(self, **kwargs: Unpack[LogParOpt]) -> None:  # pragma: no cover
         self.log_opt |= kwargs
 
-    def configure_render(self, **kwargs: Unpack[RenderParOpt]) -> None:
+    def configure_render(
+        self, **kwargs: Unpack[RenderParOpt]
+    ) -> None:  # pragma: no cover
         self.render_opt |= kwargs
 
-    def configure_capture_warning(self, **kwargs: Unpack[CapwarnParOpt]) -> None:
+    def configure_capture_warning(
+        self, **kwargs: Unpack[CapwarnParOpt]
+    ) -> None:  # pragma: no cover
         self.capture_warning_opt |= kwargs
 
-    def configure_capture_exception(self, **kwargs: Unpack[CapexcParOpt]) -> None:
+    def configure_capture_exception(
+        self, **kwargs: Unpack[CapexcParOpt]
+    ) -> None:  # pragma: no cover
         self.capture_exception_opt |= kwargs
 
+    @staticmethod
     def configure_logger(
-        self, loggers: Collection[str | None], **kwargs: Unpack[LoggerParOpt]
+        loggers: Collection[str | None], **kwargs: Unpack[LoggerParOpt]
     ) -> None:
-        logger_opt = self.logger_opt | kwargs if self.logger_opt else kwargs
-        logger_opt = LoggerFullOpt(**logger_opt)
-        for l_ in loggers:
-            logger = logging.getLogger(l_)
+        logger_opt = LoggerFullOpt(**kwargs)
+        for lname in loggers:
+            logger = logging.getLogger(lname)
             logger.setLevel(get_level(logger_opt.level))
             logger.propagate = logger_opt.propagate
 
@@ -150,8 +163,8 @@ class Shell:  # noqa: PLR0904
 
     def add_branch(
         self,
-        logger: str | None,
         *sinks: tuple[str, Sink],
+        logger: str | None,
         **kwargs: Unpack[BranchParOpt],
     ) -> None:
         console_fields = ConsoleParOpt.__annotations__.keys()
@@ -232,7 +245,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.log(
             logging.getLogger(logger),
             get_level(level),
@@ -247,7 +260,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.debug(
             logging.getLogger(logger),
             msg,
@@ -261,7 +274,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.info(
             logging.getLogger(logger),
             msg,
@@ -275,7 +288,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.warning(
             logging.getLogger(logger),
             msg,
@@ -289,7 +302,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.error(
             logging.getLogger(logger),
             msg,
@@ -303,7 +316,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.critical(
             logging.getLogger(logger),
             msg,
@@ -317,7 +330,7 @@ class Shell:  # noqa: PLR0904
         msg: str,
         *args: object,
         **kwargs: Unpack[LogParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         _f.exception(
             logging.getLogger(logger),
             msg,
@@ -331,7 +344,7 @@ class Shell:  # noqa: PLR0904
         level: str | int,
         *objs: RichConsoleRenderable,
         **kwargs: Unpack[RenderParOpt],
-    ) -> None:
+    ) -> None:  # pragma: no cover
         with self.lock:
             _f.render(
                 self.branches,
@@ -348,6 +361,36 @@ class Shell:  # noqa: PLR0904
                 return
             _f.recycle_task(self.branches, task)
             _f.recycle_progress(self.branches)
+
+    def add_tags(self, *tags: str) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.add_tags(self.db_connection, run_opt.uuid, tags)
+
+    def remove_tags(self, *tags: str) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.remove_tags(self.db_connection, run_opt.uuid, tags)
+
+    def add_hparams(self, hparams: Jsonlike) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.add_hparams(self.db_connection, run_opt.uuid, hparams)
+
+    def add_summaries(self, summaries: Jsonlike) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.add_summaries(self.db_connection, run_opt.uuid, summaries)
+
+    def add_extras(self, extras: Jsonlike) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.add_extras(self.db_connection, run_opt.uuid, extras)
 
     def track(
         self,
@@ -379,3 +422,21 @@ class Shell:  # noqa: PLR0904
             dstdir=self.storage_dir / run_opt.artifacts_dir,
             ctx=context,
         )
+
+    def update_status(self, status: Status) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.update_status(self.db_connection, run_opt.uuid, status)
+
+    def close_run(self) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.close_run(self.db_connection, run_opt.uuid)
+
+    def archive_run(self) -> None:
+        if not self.run_opt or not self.db_connection:
+            raise ValueError
+        run_opt = RunFullOpt(**self.run_opt)
+        _f.archive_run(self.db_connection, run_opt.uuid)

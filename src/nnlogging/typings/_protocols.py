@@ -14,14 +14,10 @@ from typing import (
 
 
 if TYPE_CHECKING:
-    from nnlogging.typings._log import LogRecord
-
-
-if TYPE_CHECKING:
     from dataclasses import Field
 
     from ._exts import ExcInfoType, NotRequired
-    from ._log import WarnMsg
+    from ._log import LogRecord, WarnMsg
     from ._rich import RichConsole, RichHandler, RichProgress, RichTaskID
 
 

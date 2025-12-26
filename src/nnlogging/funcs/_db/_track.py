@@ -6,7 +6,7 @@ from duckdb import ConversionException
 
 from nnlogging.exceptions import TrackStepOutRangeError
 from nnlogging.helpers import dumps
-from nnlogging.typings._db import DuckConnection, StepTrack
+from nnlogging.typings import DuckConnection, StepTrack
 from nnlogging.utils import check_exprun_updatable
 
 

@@ -1,0 +1,30 @@
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    settings:
+      depth: 1
+      recursive: false
+      lfs: false
+
+steps:
+  build:
+    image: astral/uv:bookworm-slim
+    commands:
+      - uv build --quiet --wheel
+    when:
+      event: release
+    depends_on: []
+
+  publish:
+    image: gitea.elara.ws/music-kraken/plugin-twine
+    settings:
+      username: __token__
+      password:
+        from_secret: pypi-publish
+    depends_on: [build]
+    when:
+      event: release
+
+when:
+  branch: main
+  event: release

@@ -1,7 +1,7 @@
 from pathlib import Path
 from uuid import UUID
 
-from nnlogging.typings._db import DuckConnection, Status
+from nnlogging.typings import DuckConnection, Status
 from nnlogging.utils import check_exprun_updatable
 
 

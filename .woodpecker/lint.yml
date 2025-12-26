@@ -35,10 +35,11 @@ steps:
     depends_on: []
 
   pylint:
-    image: registry.gitlab.com/pipeline-components/pylint:latest
+    image: astral/uv:bookworm-slim
     commands:
-      - pip install --quiet --no-deps .
-      - pylint src/
+      - uv venv
+      - uv sync --extra=pylint --quiet
+      - uv run pylint --errors-only src/
     when:
       event: [push, manual]
     depends_on: []
@@ -50,3 +51,6 @@ steps:
     when:
       event: [push, manual]
     depends_on: []
+
+when:
+  event: [push, manual]

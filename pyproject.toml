@@ -1,6 +1,6 @@
 [project]
 name = "nnlogging"
-version = "0.2.0"
+version = "0.2.0a1"
 description = "A powerful and elegant logging library designed specifically for neural network and machine learning experiments."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -32,6 +32,7 @@ Issues = "https://codeberg.org/amas127/nnlogging/issues"
 Repository = "https://codeberg.org/amas127/nnlogging.git"
 
 [project.optional-dependencies]
+pylint = ["pylint>=4.0.4"]
 pytest = ["faker>=37", "pytest>=8", "pytest-cov>=7"]
 
 [build-system]

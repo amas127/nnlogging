@@ -6,15 +6,29 @@ clone:
       recursive: false
       lfs: false
 
+matrix:
+  python_version:
+    - 3.10
+    - 3.11
+    - 3.12
+    - 3.13
+    - 3.14
+
 steps:
   pytest:
     image: astral/uv:bookworm-slim
     commands:
+      - uv venv
+      - uv python pin ${python_version}
       - uv sync --quiet --extra=pytest
       - uv run dvc init --no-scm .
       - >-
         uv run pytest tests/
         --cov=src/ --cov-report="term-missing" --cov-branch --cov-fail-under=80
-
     when:
-      event: [pull_request]
+      event: [pull_request, push]
+    depends_on: []
+
+when:
+  branch: main
+  event: [pull_request, push]

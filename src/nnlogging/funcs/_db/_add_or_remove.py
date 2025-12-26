@@ -2,7 +2,7 @@ from pathlib import Path
 from uuid import UUID
 
 from nnlogging.helpers import dumps
-from nnlogging.typings._db import DuckConnection, Jsonlike
+from nnlogging.typings import DuckConnection, Jsonlike
 from nnlogging.utils import check_exprun_updatable
 
 
@@ -14,7 +14,9 @@ def _sqlstr_add_tags() -> str:
         return f.read()
 
 
-def add_tags(con: DuckConnection, uuid: UUID, tags: list[str] | tuple[str]) -> None:
+def add_tags(
+    con: DuckConnection, uuid: UUID, tags: list[str] | tuple[str, ...]
+) -> None:
     if check_exprun_updatable(con, uuid):
         _ = con.execute(_sqlstr_add_tags(), (uuid, tags))
 
@@ -24,7 +26,9 @@ def _sqlstr_remove_tags() -> str:
         return f.read()
 
 
-def remove_tags(con: DuckConnection, uuid: UUID, tags: list[str] | tuple[str]) -> None:
+def remove_tags(
+    con: DuckConnection, uuid: UUID, tags: list[str] | tuple[str, ...]
+) -> None:
     if check_exprun_updatable(con, uuid):
         _ = con.execute(_sqlstr_remove_tags(), (uuid, tags))
 
